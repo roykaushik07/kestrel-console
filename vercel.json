@@ -1,0 +1,7 @@
+{
+  "framework": "nextjs",
+  "regions": ["dub1"],
+  "functions": {
+    "app/api/stream/route.ts": { "maxDuration": 300 }
+  }
+}
