@@ -10,6 +10,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   session: { strategy: "jwt", maxAge: 60 * 60 * 8 },
+  pages: { error: "/" },
   callbacks: {
     async jwt({ token, account }) {
       if (account?.access_token) token.accessToken = account.access_token;
