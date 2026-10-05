@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import type { Mission } from "@kestrel/contracts";
+import { env } from "@/lib/env";
 import { gatewayFetch } from "@/lib/gateway";
 
 const NEW_ID = /^msn_[0-9A-HJKMNP-TV-Z]{26}$/;
@@ -19,7 +20,8 @@ export async function GET(req: NextRequest) {
   // Missions created before the dispatch migration use numeric ids and are
   // only resolvable through the legacy router.
   if (id && !NEW_ID.test(id)) {
-    const legacy = await fetch(`${process.env.LEGACY_ROUTER_URL}/missions/${encodeURIComponent(id)}`);
+    if (!env.LEGACY_ROUTER_URL) return NextResponse.json({ error: "legacy router not configured" }, { status: 501 });
+    const legacy = await fetch(`${env.LEGACY_ROUTER_URL}/missions/${encodeURIComponent(id)}`);
     return NextResponse.json(await legacy.json(), { status: legacy.status });
   }
 

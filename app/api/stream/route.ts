@@ -1,5 +1,6 @@
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
+import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
@@ -9,7 +10,7 @@ export async function GET(req: Request) {
   const session = await getServerSession(authOptions);
   if (!session) return new Response("unauthorized", { status: 401 });
 
-  const upstream = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/v1/telemetry/stream`, {
+  const upstream = await fetch(`${env.NEXT_PUBLIC_API_URL}/v1/telemetry/stream`, {
     headers: { authorization: `Bearer ${session.accessToken}`, accept: "text/event-stream" },
     signal: req.signal,
   });

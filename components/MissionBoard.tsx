@@ -4,7 +4,7 @@ import useSWR from "swr";
 import type { Mission } from "@kestrel/contracts";
 
 const fetcher = (url: string) => fetch(url).then((r) => r.json());
-const COLUMNS: Mission["status"][] = ["queued", "airspace_pending", "cleared", "in_flight", "delivered"];
+const COLUMNS: Mission["status"][] = ["queued", "airspace_pending", "cleared", "in_flight", "delivered", "aborted", "returned"];
 
 export default function MissionBoard() {
   const { data, error } = useSWR<Mission[]>("/api/missions", fetcher, { refreshInterval: 5000 });
@@ -15,7 +15,7 @@ export default function MissionBoard() {
       <h2>Mission board</h2>
       {COLUMNS.map((status) => (
         <section key={status}>
-          <h3>{status.replace("_", " ")}</h3>
+          <h3>{status.replaceAll("_", " ")}</h3>
           <ul>
             {(data ?? [])
               .filter((m) => m.status === status)
